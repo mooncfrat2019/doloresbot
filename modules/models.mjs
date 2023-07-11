@@ -17,10 +17,26 @@ export const pills_data = seq.define('pills_data', {
   time: {
     type: DataTypes.STRING({ length: 50 })
   },
-  state: {
-    type: DataTypes.INTEGER()
-  },
   count: {
     type: DataTypes.INTEGER()
+  },
+}, { timestamps: false });
+
+export const bot_users = seq.define('bot_users', {
+  id: {
+    type: DataTypes.MEDIUMINT(),
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  user_id: {
+    type: DataTypes.INTEGER()
+  },
+  current_pill_id: {
+    type: DataTypes.INTEGER(),
+    defaultValue: 0,
+  },
+  state: {
+    type: DataTypes.INTEGER(),
+    defaultValue: 0,
   },
 }, { timestamps: false });

@@ -4,7 +4,8 @@
   "main": "main.mjs",
   "license": "MIT",
   "scripts": {
-    "start": "pm2 start ecosystem_config.yml && pm2 logs botDolores"
+    "start": "pm2 start ecosystem_config.yml && pm2 logs botDolores",
+    "startCron": "pm2 start ecosystem_config.yml && pm2 logs botDoloresCron"
   },
   "dependencies": {
     "axios": "^1.4.0",
@@ -12,6 +13,7 @@
     "express": "^4.18.2",
     "moment": "^2.29.4",
     "mysql2": "^3.5.1",
+    "node-cron": "^3.0.2",
     "sequelize": "^6.32.1"
   }
 }

@@ -13,6 +13,22 @@ export const startKeyboard = {
         ]
     ]
 }
+
+export const cancelKeyboard = {
+    "one_time": false,
+    "buttons": [
+        [
+            {
+                "action": {
+                    "type": "text",
+                    "label": "Отмена",
+                    "payload": "{\"button\":\"cancel\"}"
+                },
+                "color": "negative"
+            }
+        ]
+    ]
+}
 export const addPillKeyboard = {
     "one_time": false,
     "buttons": [
@@ -28,11 +44,29 @@ export const addPillKeyboard = {
             {
                 "action": {
                     "type": "text",
-                    "label": "Отмена",
-                    "payload": "{\"button\":\"add0\"}"
+                    "label": "Удалить",
+                    "payload": "{\"button\":\"remove1\"}"
                 },
                 "color": "secondary"
             }
-        ]
+        ],
+        [
+            {
+                "action": {
+                    "type": "text",
+                    "label": "Список",
+                    "payload": "{\"button\":\"list\"}"
+                },
+                "color": "primary"
+            },
+            {
+                "action": {
+                    "type": "text",
+                    "label": "Отмена",
+                    "payload": "{\"button\":\"cancel\"}"
+                },
+                "color": "secondary"
+            }
+        ],
     ]
 }
