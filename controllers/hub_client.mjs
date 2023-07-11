@@ -16,5 +16,5 @@ export const hub_client = async ({req, res, route}) => {
       }
     },
   }
-  return act[route]();
+  return res.send(await act[req.params.routeName]());
 }
