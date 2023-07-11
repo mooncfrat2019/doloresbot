@@ -8,7 +8,7 @@ const { Op } = pkg;
 
 const toRun = async () => {
   try {
-    const current_time = moment().format("HH:mm");
+    const current_time = moment().utcOffset('+0300').format("HH:mm");
     console.log('current_time', current_time);
     const pills = await pills_data.findAll({ where: { time: current_time }});
     if (pills.length) {
