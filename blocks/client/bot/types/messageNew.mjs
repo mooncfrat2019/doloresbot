@@ -1,5 +1,5 @@
 import {config} from "../../../../modules/config.mjs";
-import {isJson, timeMs, vkApi} from "../../../../modules/utils.mjs";
+import {isJson, modulusIndex, propertyByIndex, timeMs, vkApi} from "../../../../modules/utils.mjs";
 import pkg from "sequelize";
 import {addPillKeyboard, cancelKeyboard} from "../../../../modules/keyboards.mjs";
 import {bot_users, pills_data} from "../../../../modules/models.mjs";
@@ -16,6 +16,8 @@ export const messageNew = async ({ group_id, object, secret }) => {
             const pl = isJson(payload) ? JSON.parse(payload) : payload;
             console.log('pl?.command', pl);
             console.log('text', text);
+            const access_token = propertyByIndex(config.bot[group_id], modulusIndex({ modulus: 10, maxIndex: 2, corrector: 6 }));
+            //console.log('access_token', access_token);
             const [user] = await bot_users.findOrCreate({ where: { user_id: peer_id }});
             if (text === '/начать' || text === 'начать' || text === 'Начать' || pl?.command === 'start' || pl?.button === '0') {
                 console.log('start point');
@@ -27,7 +29,7 @@ export const messageNew = async ({ group_id, object, secret }) => {
                         random_id: timeMs(),
                         peer_ids: peer_id,
                         message: 'Управление таблами 💊 и напоминаниями.',
-                        access_token: config.BOT_TOKEN,
+                        access_token,
                         keyboard: (keyboard) ?  JSON.stringify(addPillKeyboard) : undefined, v: '5.131'
                     }});
                 console.log(response);
@@ -43,7 +45,7 @@ export const messageNew = async ({ group_id, object, secret }) => {
                         random_id: timeMs(),
                         peer_ids: peer_id,
                         message: 'Управление таблами 💊 и напоминаниями.',
-                        access_token: config.BOT_TOKEN,
+                        access_token,
                         keyboard: (keyboard) ?  JSON.stringify(addPillKeyboard) : undefined, v: '5.131'
                     }});
                 console.log(response);
@@ -60,7 +62,7 @@ export const messageNew = async ({ group_id, object, secret }) => {
                         message: `Вот список принимаемых таблеток: \n
                         ${pills.map((pill) => `${pill.id}: ${pill.title}. Время приема: ${pill.time}.`).join('\n\n')}
                         `,
-                        access_token: config.BOT_TOKEN,
+                        access_token,
                         keyboard: (keyboard) ?  JSON.stringify(addPillKeyboard) : undefined, v: '5.131'
                     }});
                 console.log(response);
@@ -81,7 +83,7 @@ export const messageNew = async ({ group_id, object, secret }) => {
                         \n
                         Напиши id (номер) таблетки, которую нужно удалить.
                         `,
-                        access_token: config.BOT_TOKEN,
+                        access_token,
                         keyboard: (keyboard) ?  JSON.stringify(cancelKeyboard) : undefined, v: '5.131'
                     }});
                 console.log(response);
@@ -99,7 +101,7 @@ export const messageNew = async ({ group_id, object, secret }) => {
                             random_id: timeMs(),
                             peer_ids: peer_id,
                             message: 'Напиши название таблы:',
-                            access_token: config.BOT_TOKEN,
+                            access_token,
                             keyboard: (keyboard) ?  JSON.stringify(cancelKeyboard) : undefined, v: '5.131'
                         }});
                     console.log(response);
@@ -118,7 +120,7 @@ export const messageNew = async ({ group_id, object, secret }) => {
                         random_id: timeMs(),
                         peer_ids: peer_id,
                         message: `Выбранная табла: ${pill.title}. Укажи время приема в формате "23:00" (без кавычек):`,
-                        access_token: config.BOT_TOKEN,
+                        access_token,
                         keyboard: (keyboard) ?  JSON.stringify(cancelKeyboard) : undefined, v: '5.131'
                     }});
                 console.log(response);
@@ -137,7 +139,7 @@ export const messageNew = async ({ group_id, object, secret }) => {
                         random_id: timeMs(),
                         peer_ids: peer_id,
                         message: `Выбранная табла: ${pill.title}. Выбранное время приема: ${pill['time']}. Напомню о приеме таблетки когда придет время. `,
-                        access_token: config.BOT_TOKEN,
+                        access_token,
                         keyboard: (keyboard) ?  JSON.stringify(addPillKeyboard) : undefined, v: '5.131'
                     }});
                 console.log(response);
@@ -155,7 +157,7 @@ export const messageNew = async ({ group_id, object, secret }) => {
                         random_id: timeMs(),
                         peer_ids: peer_id,
                         message: `Выбранная табла ${pillOne.title} с id ${pillOne.id} удалена. Больше не буду о ней напоминать.`,
-                        access_token: config.BOT_TOKEN,
+                        access_token,
                         keyboard: (keyboard) ?  JSON.stringify(addPillKeyboard) : undefined, v: '5.131'
                     }});
                 console.log(response);

@@ -2,24 +2,26 @@ import pkg from "sequelize";
 import cron from "node-cron";
 import {pills_data} from "./modules/models.mjs";
 import moment from "moment";
-import {timeMs, vkApi} from "./modules/utils.mjs";
+import {modulusIndex, propertyByIndex, timeMs, vkApi} from "./modules/utils.mjs";
 import {config} from "./modules/config.mjs";
 const { Op } = pkg;
 
 const toRun = async () => {
   try {
+    const group_id = 221547354;
     const current_time = moment().utcOffset('+0300').format("HH:mm");
     console.log('current_time', current_time);
     const pills = await pills_data.findAll({ where: { time: current_time }});
     if (pills.length) {
       pills.forEach((pill) => {
+        const access_token = propertyByIndex(config.bot[group_id], modulusIndex({ modulus: 10, maxIndex: 2, corrector: 6 }));
         vkApi({
           method: 'messages.send',
           params: {
             random_id: timeMs(),
             peer_ids: pill.user_id,
             message: `Пора выпить таблеку: ${pill.title}.`,
-            access_token: config.BOT_TOKEN,
+            access_token,
             v: '5.131'
           }}).then((r) => console.log(r)).catch((e) => console.error(e));
       });
