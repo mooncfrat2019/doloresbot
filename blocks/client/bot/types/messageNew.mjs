@@ -119,7 +119,7 @@ export const messageNew = async ({ group_id, object, secret }) => {
                     params: {
                         random_id: timeMs(),
                         peer_ids: peer_id,
-                        message: `Выбранная табла: ${pill.title}. Укажи время приема в формате "23:00" (без кавычек):`,
+                        message: `Выбранная табла: ${pill.title}. Укажи время приема в формате "23:00" (без кавычек и только одно время на одну таблетку):`,
                         access_token,
                         keyboard: (keyboard) ?  JSON.stringify(cancelKeyboard) : undefined, v: '5.131'
                     }});
