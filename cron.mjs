@@ -12,7 +12,7 @@ const toRun = async () => {
     const current_time = moment().utcOffset('+0300').format("HH:mm");
     console.log('current_time', current_time);
     const pills = await pills_data.findAll({ where: { time: current_time }});
-    const users = await bot_users.findAll({ where: { is_message_allowed: 1 }});
+    const users = await bot_users.findAll({ where: { is_messages_allowed: 1 }});
     const ids = users.map((user) => user.user_id)
     if (pills.length) {
       const filtered = pills.filter((pill) => ids.includes(pill.user_id));
