@@ -39,4 +39,8 @@ export const bot_users = seq.define('bot_users', {
     type: DataTypes.INTEGER(),
     defaultValue: 0,
   },
+  is_messages_allowed: {
+    type: DataTypes.INTEGER(),
+    defaultValue: 1,
+  },
 }, { timestamps: false });

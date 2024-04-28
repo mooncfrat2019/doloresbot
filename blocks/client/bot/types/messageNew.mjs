@@ -19,6 +19,8 @@ export const messageNew = async ({ group_id, object, secret }) => {
             const access_token = propertyByIndex(config.bot[group_id], modulusIndex({ modulus: 10, maxIndex: 2, corrector: 6 }));
             //console.log('access_token', access_token);
             const [user] = await bot_users.findOrCreate({ where: { user_id: peer_id }});
+            await user.update({ is_message_allowed: 1 });
+            await user.save()
             if (text === '/начать' || text === 'начать' || text === 'Начать' || pl?.command === 'start' || pl?.button === '0') {
                 console.log('start point');
                 await user.update({ state: 1 });
