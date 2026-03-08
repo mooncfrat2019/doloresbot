@@ -61,9 +61,7 @@ export const messageNew = async ({ group_id, object, secret }) => {
                     params: {
                         random_id: timeMs(),
                         peer_ids: peer_id,
-                        message: `Вот список принимаемых таблеток: \n
-                        ${pills.map((pill) => `${pill.id}: ${pill.title}. Время приема: ${pill.time}.`).join('\n\n')}
-                        `,
+                        message: `Вот список принимаемых таблеток: \n ${pills.map((pill) => `${pill.id}: ${pill.title}. Время приема: ${pill.time}.`).join('\n\n')}`,
                         access_token,
                         keyboard: (keyboard) ?  JSON.stringify(addPillKeyboard) : undefined, v: '5.131'
                     }});
