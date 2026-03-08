@@ -65,5 +65,4 @@ echo ""
 exec pm2-runtime start /app/pm2.config.cjs \
     --output /dev/stdout \
     --error /dev/stderr \
-    --env production \
-    --no-daemon
+    --env production
