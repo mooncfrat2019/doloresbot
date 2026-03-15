@@ -8,8 +8,8 @@ const { Op } = pkg;
 export const messageNew = async ({ group_id, object, secret }) => {
     try {
         if (secret === config.bot_secret) {
-            await pills_data.sync({ alter: true });
-            await bot_users.sync({ alter: true });
+            //await pills_data.sync({ alter: true });
+            //await bot_users.sync({ alter: true });
             const { message, client_info } = object;
             const { keyboard } = client_info;
             const { text, payload, peer_id } = message;
