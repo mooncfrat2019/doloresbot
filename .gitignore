@@ -1,3 +1,4 @@
 .env
 *config.yml
 .idea
+.some_test
