@@ -1,0 +1,43 @@
+name: Build and Push Docker Image, Restart deployment
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build-and-push:
+    runs-on: self-hosted
+    environment: main
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Registry
+        run: |
+          echo "${{ secrets.REGISTRY_TOKEN }}" | docker login \
+            ${{ secrets.REGISTRY_URL }} \
+            -u ${{ secrets.REGISTRY_LOGIN }} \
+            --password-stdin
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.REGISTRY_URL }}/${{ vars.IMAGE_NAME }}:latest .
+
+      - name: Push Docker image
+        run: |
+          docker push ${{ secrets.REGISTRY_URL }}/${{ vars.IMAGE_NAME }}:latest
+
+      - name: Logout from Docker Registry
+        run: docker logout ${{ secrets.REGISTRY_URL }}
+
+      - name: Restart k8s deployment
+        run: |
+          kubectl rollout restart deployment/${{ vars.DEPLOYMENT_NAME }}
+          sleep 5
+
+      - name: Get current pods
+        run: |
+          kubectl get pods
