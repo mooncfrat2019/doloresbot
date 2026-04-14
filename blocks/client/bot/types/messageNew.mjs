@@ -3,6 +3,7 @@ import {isJson, modulusIndex, propertyByIndex, timeMs, vkApi} from "../../../../
 import pkg from "sequelize";
 import {addPillKeyboard, cancelKeyboard} from "../../../../modules/keyboards.mjs";
 import {bot_users, pills_data} from "../../../../modules/models.mjs";
+import {addResponseTime, incMetric, trackUser} from "../../../../modules/metrics.mjs";
 const { Op } = pkg;
 
 export const messageNew = async ({ group_id, object, secret }) => {
@@ -10,6 +11,9 @@ export const messageNew = async ({ group_id, object, secret }) => {
         if (secret === config.bot_secret) {
             //await pills_data.sync({ alter: true });
             //await bot_users.sync({ alter: true });
+            const start = Date.now();
+            const ms = Date.now() - start;
+            await incMetric("vk_requests_in_flight", 1);
             const { message, client_info } = object;
             const { keyboard } = client_info;
             const { text, payload, peer_id } = message;
@@ -20,7 +24,9 @@ export const messageNew = async ({ group_id, object, secret }) => {
             //console.log('access_token', access_token);
             const [user] = await bot_users.findOrCreate({ where: { user_id: peer_id }});
             await user.update({ is_message_allowed: 1 });
-            await user.save()
+            await user.save();
+            await incMetric("vk_messages_total");
+            await trackUser(peer_id);
             if (text === '/начать' || text === 'начать' || text === 'Начать' || pl?.command === 'start' || pl?.button === '0') {
                 console.log('start point');
                 await user.update({ state: 1 });
@@ -36,6 +42,11 @@ export const messageNew = async ({ group_id, object, secret }) => {
                     }});
                 console.log(response);
                 console.error(messagesSendError);
+                if (messagesSendError) {
+                    await incMetric("vk_errors_total");
+                }
+                await addResponseTime(ms);
+                await incMetric("vk_requests_in_flight", -1);
                 return 'ok'
             }
             if (pl?.button && pl?.button.startsWith('cancel')) {
@@ -52,6 +63,11 @@ export const messageNew = async ({ group_id, object, secret }) => {
                     }});
                 console.log(response);
                 console.error(messagesSendError);
+                if (messagesSendError) {
+                    await incMetric("vk_errors_total");
+                }
+                await addResponseTime(ms);
+                await incMetric("vk_requests_in_flight", -1);
                 return 'ok'
             }
             if (pl?.button && pl?.button.startsWith('list')) {
@@ -67,6 +83,11 @@ export const messageNew = async ({ group_id, object, secret }) => {
                     }});
                 console.log(response);
                 console.error(messagesSendError);
+                if (messagesSendError) {
+                    await incMetric("vk_errors_total");
+                }
+                await addResponseTime(ms);
+                await incMetric("vk_requests_in_flight", -1);
                 return 'ok'
             }
             if (pl?.button && pl?.button.startsWith('remove')) {
@@ -88,6 +109,11 @@ export const messageNew = async ({ group_id, object, secret }) => {
                     }});
                 console.log(response);
                 console.error(messagesSendError);
+                if (messagesSendError) {
+                    await incMetric("vk_errors_total");
+                }
+                await addResponseTime(ms);
+                await incMetric("vk_requests_in_flight", -1);
                 return 'ok'
             }
             if (pl?.button && pl?.button.startsWith('add')) {
@@ -106,6 +132,11 @@ export const messageNew = async ({ group_id, object, secret }) => {
                         }});
                     console.log(response);
                     console.error(messagesSendError);
+                    if (messagesSendError) {
+                        await incMetric("vk_errors_total");
+                    }
+                    await addResponseTime(ms);
+                    await incMetric("vk_requests_in_flight", -1);
                     return 'ok'
                 }
             }
@@ -125,6 +156,11 @@ export const messageNew = async ({ group_id, object, secret }) => {
                     }});
                 console.log(response);
                 console.error(messagesSendError);
+                if (messagesSendError) {
+                    await incMetric("vk_errors_total");
+                }
+                await addResponseTime(ms);
+                await incMetric("vk_requests_in_flight", -1);
                 return 'ok'
             }
             if (user && user.state === 3) {
@@ -144,6 +180,11 @@ export const messageNew = async ({ group_id, object, secret }) => {
                     }});
                 console.log(response);
                 console.error(messagesSendError);
+                if (messagesSendError) {
+                    await incMetric("vk_errors_total");
+                }
+                await addResponseTime(ms);
+                await incMetric("vk_requests_in_flight", -1);
                 return 'ok'
             }
             if (user && user.state === 10) {
@@ -162,6 +203,11 @@ export const messageNew = async ({ group_id, object, secret }) => {
                     }});
                 console.log(response);
                 console.error(messagesSendError);
+                if (messagesSendError) {
+                    await incMetric("vk_errors_total");
+                }
+                await addResponseTime(ms);
+                await incMetric("vk_requests_in_flight", -1);
                 return 'ok'
             }
           }
