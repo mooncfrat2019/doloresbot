@@ -6,6 +6,7 @@ export const config = {
   bot_secret: process.env.BOT_SECRET,
   bot_confirmation: process.env.BOT_CONFIRMATION,
   mysql_config: {
+    ca_cert: process.env.CA_CERT,
     host: process.env.DBHOST,
     user:  process.env.DBLOGIN,
     password:  process.env.DBPASS,

@@ -4,16 +4,31 @@ import pkg from 'sequelize';
 import Redis from "ioredis";
 const { Sequelize } = pkg;
 
-export const seq = new Sequelize(config.mysql_config.database, config.mysql_config.user, config.mysql_config.password, {
-  host: config.mysql_config.host,
-  port: config.mysql_config.port,
-  dialect: 'mysql',
-  charset: 'utf8mb4',
-  define: {
-    charset: 'utf8mb4',
-    collate: 'utf8mb4_unicode_520_ci'
-  },
-});
+const caCertBase64 = config.mysql_config.ca_cert; // base64 строка из переменной окружения
+const caCertPEM = Buffer.from(caCertBase64, 'base64').toString('utf8');
+
+export const seq = new Sequelize(
+    config.mysql_config.database,
+    config.mysql_config.user,
+    config.mysql_config.password,
+    {
+      host: config.mysql_config.host,
+      port: config.mysql_config.port,
+      dialect: 'mysql',
+      charset: 'utf8mb4',
+      dialectOptions: {
+        ssl: {
+          ca: caCertPEM,
+          // Если нужно проверить имя хоста
+          // rejectUnauthorized: true
+        }
+      },
+      define: {
+        charset: 'utf8mb4',
+        collate: 'utf8mb4_unicode_520_ci'
+      },
+    }
+);
 
 export const redis = new Redis({
   host: process.env.REDIS_HOST || "127.0.0.1",
